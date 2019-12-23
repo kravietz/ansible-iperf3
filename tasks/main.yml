@@ -1,2 +1,25 @@
 ---
-# tasks file for ansible-iperf3
+- name: iperf3 installed
+  apt:
+    name: iperf3
+
+- name: apparmor profile file
+  template:
+    dest: /etc/apparmor.d/iperf3_server
+    src: templates/apparmor.conf
+    owner: root
+    group: root
+    mode: 0644
+    validate: /usr/sbin/apparmor_parser -d %s
+  notify:
+  - load apparmor profile
+
+- name: systemd service file
+  template:
+    dest: /etc/systemd/system/iperf3-server.service
+    src: templates/iperf3-service.ini
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+  - load iperf3 service

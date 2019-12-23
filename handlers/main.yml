@@ -1,2 +1,10 @@
 ---
-# handlers file for ansible-iperf3
+- name: load apparmor profile
+  command: /usr/sbin/apparmor_parser -r -W /etc/apparmor.d/iperf3_server
+
+- name: load iperf3 service
+  systemd:
+    daemon_reload: yes
+    name: iperf3-server.service
+    enabled: yes
+    state: restarted
